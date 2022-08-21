@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1{
+            text-align: center;
+            margin-bottom: 20px;
+            color:green;
+
+        }
+        div{
+            width: 15%;
+            margin:auto;
+            display:grid; 
+        }
+        input{
+            height: 30px;
+        }
+        button{
+            height:30px;
+        }
+    </style>
+</head>
+<body>
+   <div>
+    <h1>ADD POST</h1>
+    <input type="text" placeholder="Enter id" id="id">
+    <input type="text" placeholder="Enter title" id="title">
+    <input type="text" placeholder="Enter author" id="author">
+    <button onclick="addProduct()">Submit</button>
+   </div>
+   <div>
+    <h1>Add PUT</h1>
+    <input type="text" placeholder="Enter id" id="put_id">
+    <input type="text" placeholder="Enter title" id="put_title">
+    <input type="text" placeholder="Enter author" id="put_author">
+    <button onclick="putPost()">Submit</button>
+   </div>
+   <div>
+    <h1>Add PATCH</h1>
+    <input type="text" placeholder="Enter id" id="patch_id">
+    <input type="text" placeholder="Enter Update value" id="patch_update">
+    <button onclick="patchPost()">Add Patch</button>
+   </div>
+   <div>
+    <h1>DELETE POST</h1>
+    <input type="text" id="delete_id" placeholder="Enter id to delete">
+    <button onclick="deletePost()">Delete</button>
+   </div>
+    
+</body>
+</html>
+
+<script>
+    async function addProduct(){
+        let id=document.querySelector("#id").value;
+        let title=document.querySelector("#title").value;
+        let author=document.querySelector("#author").value;
+
+        let send_this_data={
+            id,
+            title,
+            author
+        };
+
+        let res=await fetch(`http://localhost:3000/posts`,{
+            method:"POST",
+
+            body: JSON.stringify(send_this_data),
+            
+            headers: {
+                'Content-Type':'application/json',
+            },
+
+        });
+        let data=await res.json();
+        console.log("data:",data);
+
+
+    }
+
+    async function putPost(){
+        let id=document.querySelector("#put_id").value;
+        let title=document.querySelector("#put_title").value;
+        let author=document.querySelector("#put_author").value;
+
+        let send_data={
+            id,
+            title,
+            author
+        };
+
+        let res=await fetch(`http://localhost:3000/posts/${id}`,{
+            method:"PUT",
+
+            body: JSON.stringify(send_data),
+            headers: {
+                'Content-Type':'application/json',
+            }
+        })
+        let data=await res.json()
+        console.log("put_data",data);
+    }
+
+    async function patchPost(){
+        let id=document.querySelector("#patch_id").value;
+        let update=document.querySelector("#patch_update").value;
+
+        let send_data={
+            id,
+            update
+
+        }
+        let res=await fetch(`http://localhost:3000/posts/${id}`,{
+            method:'PATCH',
+
+            body:JSON.stringify(send_data),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+
+        })
+        let data=await res.json();
+         console.log("patchData",data);
+    }
+
+    async function deletePost(){
+        let id=document.querySelector("#delete_id").value;
+
+        let res=await fetch(`http://localhost:3000/posts/${id}`,{
+            method:'DELETE',
+
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        let data=await res.json()
+        console.log("delete_data:",data);
+    }
+
+</script>
